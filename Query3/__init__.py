@@ -20,9 +20,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
         logging.info("Test de connexion avec py2neo...")
         graph = Graph(neo4j_server, auth=(neo4j_user, neo4j_password))
-        names = graph.run("MATCH (n:Name)-[r]->() WITH n, COUNT(DISTINCT TYPE(r)) as roles WHERE roles>2 RETURN n LIMIT 10;")
-        for producer in names:
-            dataString += f"CYPHER: nconst={producer['n.nconst']}, primaryName={producer['n.primaryName']}\n"
+        # names = graph.run("MATCH (n:Name)-[r]->() WITH n, COUNT(DISTINCT TYPE(r)) as roles WHERE roles>2 RETURN n LIMIT 10;")
+        # for producer in names:
+        #     dataString += f"CYPHER: nconst={producer['n.nconst']}, primaryName={producer['n.primaryName']}\n"
 
     except:
         errorMessage = "Erreur de connexion a la base Neo4j"

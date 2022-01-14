@@ -25,11 +25,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     password = os.environ["TPBDD_PASSWORD"]
     driver = '{ODBC Driver 17 for SQL Server}'
 
-    neo4j_server = os.environ["TPBDD_NEO4J_SERVER"]
-    neo4j_user = os.environ["TPBDD_NEO4J_USER"]
-    neo4j_password = os.environ["TPBDD_NEO4J_PASSWORD"]
-    if len(server) == 0 or len(database) == 0 or len(username) == 0 or len(password) == 0 or len(
-            neo4j_server) == 0 or len(neo4j_user) == 0 or len(neo4j_password) == 0:
+
+    if len(server) == 0 or len(database) == 0 or len(username) == 0 or len(password) == 0:
         return func.HttpResponse(
             "Au moins une des variables d'environnement n'a pas été initialisée.", status_code=500)
     dataString = ""
@@ -42,16 +39,23 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 "SELECT AVG(averageRating) AS MeanValue, genre from [dbo].[tTitles] as t INNER JOIN[dbo].[tGenres] as g on t.tconst=g.tconst GROUP BY genre")
 
             rows = cursor.fetchall()
+            
             for row in rows:
-                dataString += f"SQL: tconst={row[0]}, primaryTitle={row[1]}, averageRating={row[2]}\n"
+                dataString += f"SQL: MeanValue={row[0]}, genre={row[1]}\n"
 
     except BaseException:
         errorMessage = "Erreur de connexion a la base SQL"
 
     if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+        nameMessage = f"Hello, {name}!\n"
+    else:
+        nameMessage = "Le parametre 'name' n'a pas ete fourni lors de l'appel.\n"
+
+    if errorMessage != "":
+        return func.HttpResponse(
+            dataString + nameMessage + errorMessage, status_code=500)
+
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
+            dataString + nameMessage + " Connexions réussies a Neo4j et SQL!")
+    

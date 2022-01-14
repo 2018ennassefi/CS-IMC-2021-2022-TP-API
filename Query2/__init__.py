@@ -32,7 +32,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 "SELECT AVG(averageRating) AS MeanValue, genre from [dbo].[tTitles] as t INNER JOIN[dbo].[tGenres] as g on t.tconst=g.tconst GROUP BY genre")
 
             rows = cursor.fetchall()
-            
+            dataString += "La note moyenne des films par genre"
             for row in rows:
                 dataString += f"SQL: MeanValue={row[0]}, genre={row[1]}\n"
 

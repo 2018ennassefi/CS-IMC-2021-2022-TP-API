@@ -45,7 +45,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             logging.info("Test de connexion avec pyodbc...")
             with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
                 cursor = conn.cursor()
-                cursor.execute("SELECT TOP(3) tconst, primaryTitle, averageRating FROM [dbo].[tTitles] ORDER BY averageRating DESC")
+                cursor.execute('SELECT TOP(3) tconst, primaryTitle, averageRating FROM [dbo].[tTitles] ORDER BY averageRating DESC')
 
                 rows = cursor.fetchall()
                 for row in rows:
